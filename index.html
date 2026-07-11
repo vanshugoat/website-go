@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Disable zooming and make page fit screen -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Lucky Draw</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        #banner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="banner">
+    <img src="assets/banner.png" alt="Lucky Draw Banner">
+</div>
+
+<script>
+    document.addEventListener("click", function () {
+        window.location.href = "hello.html";
+    });
+
+    document.addEventListener("touchstart", function () {
+        window.location.href = "hello.html";
+    });
+</script>
+
+</body>
+</html>

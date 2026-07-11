@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prize Claim</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.18);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #22c55e;
+      --accent2: #06b6d4;
+      --danger: #fb7185;
+      --shadow: 0 25px 50px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #1d4ed8 0%, transparent 35%),
+        radial-gradient(circle at top right, #06b6d4 0%, transparent 30%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+
+    .hero {
+      perspective: 1200px;
+      margin-top: 10px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      transform-style: preserve-3d;
+      animation: floatCard 4s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.5), rgba(6,182,212,0.35), rgba(255,255,255,0.08));
+      z-index: -1;
+      filter: blur(20px);
+    }
+
+    .shine {
+      position: absolute;
+      top: -40%;
+      left: -30%;
+      width: 70%;
+      height: 180%;
+      transform: rotate(25deg);
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent);
+      animation: shineMove 4.5s linear infinite;
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .gift {
+      width: 92px;
+      height: 92px;
+      margin: 8px auto 18px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 44px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 16px 30px rgba(0,0,0,0.28);
+      transform: translateZ(30px);
+      animation: pulseGift 2.6s ease-in-out infinite;
+    }
+
+    .progressPanel {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .progressTop {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .bar {
+      width: 100%;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    .fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+      animation: barGlow 1.8s linear infinite;
+    }
+
+    .count {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button, .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    button:active, .btn:active {
+      transform: scale(0.98);
+    }
+
+    .shareBtn {
+      color: white;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 14px 24px rgba(34,197,94,0.28);
+    }
+
+    .shareBtn:hover {
+      transform: translateY(-1px);
+    }
+
+    .secondaryBtn {
+      color: white;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      box-shadow: 0 14px 24px rgba(6,182,212,0.22);
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .formWrap {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: 0.7s ease;
+      transform-origin: center top;
+    }
+
+    .locked {
+      filter: blur(8px) grayscale(0.3);
+      opacity: 0.5;
+      pointer-events: none;
+      transform: scale(0.98);
+    }
+
+    .unlocked {
+      filter: blur(0);
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      animation: unlockPop 0.8s ease;
+    }
+
+    .formTitle {
+      margin: 0 0 6px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .formSub {
+      margin: 0 0 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #cbd5e1;
+    }
+
+    input:focus {
+      border-color: rgba(34,197,94,0.8);
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.14);
+    }
+
+    .submitBtn {
+      width: 100%;
+      color: white;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      box-shadow: 0 14px 24px rgba(239,68,68,0.22);
+    }
+
+    .unlockMsg {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(34,197,94,0.14);
+      color: #dcfce7;
+      text-align: center;
+      animation: fadeUp 0.6s ease;
+    }
+
+    .unlockMsg.show {
+      display: block;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 99;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modalCard {
+      width: 100%;
+      max-width: 360px;
+      background: linear-gradient(160deg, rgba(15,23,42,0.96), rgba(30,41,59,0.96));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: modalPop 0.35s ease;
+    }
+
+    .modalIcon {
+      font-size: 48px;
+      margin-bottom: 10px;
+      animation: pulseGift 1.8s ease-in-out infinite;
+    }
+
+    .modal h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .modal p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .closeBtn {
+      width: 100%;
+      color: white;
+      background: linear-gradient(135deg, #22c55e, #06b6d4);
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
+      25% { transform: rotateX(2deg) rotateY(-2deg) translateY(-3px); }
+      50% { transform: rotateX(0deg) rotateY(2deg) translateY(-6px); }
+      75% { transform: rotateX(-2deg) rotateY(-1deg) translateY(-2px); }
+    }
+
+    @keyframes shineMove {
+      0% { transform: translateX(-120%) rotate(25deg); }
+      100% { transform: translateX(320%) rotate(25deg); }
+    }
+
+    @keyframes pulseGift {
+      0%, 100% { transform: translateZ(30px) scale(1); }
+      50% { transform: translateZ(40px) scale(1.06); }
+    }
+
+    @keyframes barGlow {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(180%); }
+    }
+
+    @keyframes unlockPop {
+      0% { transform: scale(0.92); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.9) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .gift {
+        width: 82px;
+        height: 82px;
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="card">
+        <div class="shine"></div>
+
+        <div class="gift">🎁</div>
+
+        <h1>Claim Your Prize</h1>
+        <p class="sub">
+          Complete 15 shares to unlock the claim form. Progress updates when you tap the share button.
+        </p>
+
+        <div class="progressPanel">
+          <div class="progressTop">
+            <span>Share Progress</span>
+            <span id="progressText">0 / 15</span>
+          </div>
+
+          <div class="bar">
+            <div class="fill" id="progressFill"></div>
+          </div>
+
+          <div class="count" id="statusText">Share with 15 people to continue</div>
+        </div>
+
+        <div class="actions">
+          <button class="shareBtn" id="shareBtn">Share on WhatsApp</button>
+        </div>
+
+        <p class="note">
+          Use clear terms for any promotion. If this is a real giveaway, include eligibility, rules, and privacy details.
+        </p>
+      </div>
+    </section>
+
+    <section class="formWrap locked" id="formSection">
+      <h2 class="formTitle">Enter Your Details</h2>
+      <p class="formSub">This section unlocks after all 15 shares are completed.</p>
+
+      <div class="unlockMsg" id="unlockMsg">
+        Verification complete. Your form is now unlocked.
+      </div>
+
+      <form id="claimForm">
+        <div class="field">
+          <label for="name">Your Name</label>
+          <input id="name" type="text" placeholder="Enter your full name" required />
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input id="phone" type="tel" placeholder="Enter your phone number" required />
+        </div>
+
+        <button type="submit" class="submitBtn">Submit Claim</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal" id="successModal">
+    <div class="modalCard">
+      <div class="modalIcon">✅</div>
+      <h2>Gift Request Submitted</h2>
+      <p>Your gift will be delivered within 3 days. Thank you for your participation.</p>
+      <button class="closeBtn" id="closeModal">Done</button>
+    </div>
+  </div>
+
+  <script>
+    const shareBtn = document.getElementById('shareBtn');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const statusText = document.getElementById('statusText');
+    const formSection = document.getElementById('formSection');
+    const unlockMsg = document.getElementById('unlockMsg');
+    const claimForm = document.getElementById('claimForm');
+    const successModal = document.getElementById('successModal');
+    const closeModal = document.getElementById('closeModal');
+
+    const TARGET = 15;
+    const SECONDS_PER_SHARE = 5;
+    let count = 0;
+    let shareStartTime = null;
+    let awaitingReturn = false;
+
+    function updateUI() {
+      const percent = (count / TARGET) * 100;
+      progressText.textContent = `${count} / ${TARGET}`;
+      progressFill.style.width = `${percent}%`;
+
+      if (count < TARGET) {
+        statusText.textContent = `You need ${TARGET - count} more share${TARGET - count === 1 ? '' : 's'} to unlock`;
+      } else {
+        statusText.textContent = 'All shares completed';
+        unlockForm();
+      }
+    }
+
+    function handleReturn() {
+      if (!awaitingReturn || shareStartTime === null) return;
+      if (document.visibilityState !== 'visible') return;
+
+      const elapsedSeconds = (Date.now() - shareStartTime) / 1000;
+      const sharesEarned = Math.floor(elapsedSeconds / SECONDS_PER_SHARE);
+
+      awaitingReturn = false;
+      shareStartTime = null;
+
+      if (sharesEarned > 0 && count < TARGET) {
+        count = Math.min(TARGET, count + sharesEarned);
+        updateUI();
+      }
+    }
+
+    function unlockForm() {
+      formSection.classList.remove('locked');
+      formSection.classList.add('unlocked');
+      unlockMsg.classList.add('show');
+
+      setTimeout(() => {
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 250);
+    }
+
+    shareBtn.addEventListener('click', () => {
+      if (count >= TARGET) return;
+
+      const shareText = encodeURIComponent('Check out this website');
+      const shareUrl = encodeURIComponent(window.location.href);
+      const waUrl = `https://wa.me/?text=${shareText}%20${shareUrl}`;
+
+      window.open(waUrl, '_blank');
+      shareStartTime = Date.now();
+      awaitingReturn = true;
+    });
+
+    document.addEventListener('visibilitychange', handleReturn);
+    window.addEventListener('focus', handleReturn);
+
+    claimForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (count < TARGET) return;
+
+      successModal.classList.add('show');
+      claimForm.reset();
+    });
+
+    closeModal.addEventListener('click', () => {
+      successModal.classList.remove('show');
+    });
+
+    successModal.addEventListener('click', (e) => {
+      if (e.target === successModal) {
+        successModal.classList.remove('show');
+      }
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
