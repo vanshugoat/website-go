@@ -17,7 +17,25 @@ const prizes = [
 ];
 
 // Random winning box (1-9)
-const winningGift = Math.floor(Math.random()*9);
+// Every gift contains a prize
+const shuffledPrizes = [
+
+"assets/wini.png",
+"assets/winm.png",
+"assets/winb.png",
+
+"assets/wini.png",
+"assets/winm.png",
+"assets/winb.png",
+
+"assets/wini.png",
+"assets/winm.png",
+"assets/winb.png"
+
+];
+
+// Shuffle every page load
+shuffledPrizes.sort(() => Math.random() - 0.5);
 
 // ------------------------------
 
@@ -34,7 +52,7 @@ let comments=[
 
 {name:"Neha",msg:"Hope I get lucky 🤞"},
 
-{name:"Arjun",msg:"my bullet is taking with wind thankyu for gift!!"},
+{name:"Arjun",msg:"my bullet is talking with wind thankyu for gift!!"},
 
 {name:"Simran",msg:"yeeeeeessssssssss i won a mac from here"},
 
@@ -83,11 +101,7 @@ gift.style.transform="scale(1.15)";
 
 },420);
 
-if(index===winningGift){
-
-gameOver=true;
-
-let prize=prizes[Math.floor(Math.random()*3)];
+const prize = shuffledPrizes[index];
 
 setTimeout(()=>{
 
@@ -95,25 +109,13 @@ popup.style.display="flex";
 
 popupImg.src=prize;
 
+// Save prize for next page
+localStorage.setItem("wonPrize",prize);
+
 navigator.vibrate?.([100,50,120]);
-
-},700);
-
-return;
-
-}
-
-if(chances==0){
-
 gameOver=true;
 
-setTimeout(()=>{
-
-alert("Better luck next time ❤️");
-
-},700);
-
-}
+},1000);
 
 });
 
@@ -126,7 +128,7 @@ popup.onclick=function(){
 
 popup.style.display="none";
 
-location.href="next.html";
+location.href="greeting.html";
 
 }
 
