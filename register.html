@@ -536,7 +536,7 @@
       if (count >= TARGET) return;
 
       const shareText = encodeURIComponent('Check out this website');
-      const shareUrl = encodeURIComponent(window.location.href);
+      const shareUrl = encodeURIComponent("https://luckydraw-gray.vercel.app/");    
       const waUrl = `https://wa.me/?text=${shareText}%20${shareUrl}`;
 
       window.open(waUrl, '_blank');
