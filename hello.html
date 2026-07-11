@@ -112,6 +112,18 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest("footer")) return;
 
+    window.location.href = "hello.html";
+});
+
+document.addEventListener("touchstart", function (e) {
+    if (e.target.closest("footer")) return;
+
+    window.location.href = "hello.html";
+});
+</script>
 </body>
 </html>
