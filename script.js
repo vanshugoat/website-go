@@ -65,7 +65,7 @@ gifts.forEach((gift) => {
 // ---------- CLOSE POPUP ----------
 popup.onclick = function() {
     popup.style.display = "none";
-    location.href = "next.html";
+    location.href = "register.html";
 }
 
 // ---------- COMMENTS ----------
